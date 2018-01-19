@@ -10,16 +10,13 @@ $allTests = glob('tests/*.json');
 $testNumber = $_GET['number'];
 $requiredTest = $allTests[$testNumber];
 
-// Если не существует теста с номером из get-запроса, то выдавать 404 ошибку
 if (!isset($requiredTest) || !isset($testNumber)) {
-    header('HTTP/1.0 404 Not Found');
+    header('HTTP/1.0 403 Not Found');
     die;
 }
 
-// Получаем файл с номером из GET-запроса
 $test = json_decode(file_get_contents($requiredTest), true);
 
-// Если была нажата кнопка проверки теста, то проверить и вывести результат
 if (isset($_POST['check-test'])) {
 
     $testname = basename($requiredTest);
@@ -44,7 +41,6 @@ if (isset($_POST['check-test'])) {
 
 }
 
-// Если была нажата клавиша скачивания, то скачать файл
 if (isset($_POST['generate-picture'])) {
     include_once 'src/create-picture.php';
 }
@@ -66,11 +62,8 @@ if (isset($_POST['generate-picture'])) {
 </head>
 <body>
 
-<!-- Если пользователь находиться на тесте, ссылка введет на страницу с тестами, если пользователь отправил тест на проверку и видит результаты, то возвращает на страницу с тестом -->
-
 <a href="<?php echo isset($_POST['check-test']) ? $_SERVER['HTTP_REFERER'] : 'list.php' ?>"><div>&lt; Назад</div></a><br>
 
-<!-- Если передан номер теста в GET-запросе и пользователь еще не нажал на кнопку проверки теста, то выводить тест -->
 
 <?php if (isset($_GET['number']) && !isset($_POST['check-test'])): ?>
     <form method="POST">
@@ -94,7 +87,6 @@ if (isset($_POST['generate-picture'])) {
     </form>
 <?php endif; ?>
 
-<!-- Если пользователь нажал на кнопку проверки теста, то выводить ему результаты -->
 
 <?php if (isset($_POST['check-test'])): ?>
     <div class="check-test">
